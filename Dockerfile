@@ -1,17 +1,25 @@
-FROM python:3.9-alpine
+FROM python:3.11-slim
 
+ENV PYTHONUNBUFFERED=1
+
+WORKDIR /hblink3
+
+RUN useradd \
+    --uid 54000 \
+    --create-home \
+    --shell /usr/sbin/nologin \
+    radio
+
+COPY requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY *.py ./
 COPY entrypoint /entrypoint
 
-RUN adduser -D -u 54000 radio && \
-        apk update && \
-        apk add git gcc musl-dev && \
-        cd /opt && \
-        git clone https://github.com/ShaYmez/hblink3 && \
-        cd /opt/hblink3 && \
-        pip install --no-cache-dir -r requirements.txt && \
-        apk del git gcc musl-dev && \
-        chown -R radio: /opt/hblink3
+RUN chmod +x /entrypoint && \
+    chown -R radio:radio /hblink3 /entrypoint
 
 USER radio
 
-ENTRYPOINT [ "/entrypoint" ]
+ENTRYPOINT ["/entrypoint"]
