@@ -1,5 +1,10 @@
-git add entrypoint
+#!/bin/sh
 
-git commit -m "Fix entrypoint path"
+cd /opt/hblink3 || exit 1
 
-git push
+if [ "$PARROT_ENABLE" = "1" ]; then
+    echo "Starting HBlink with Parrot....."
+    python /opt/hblink3/bridge.py -c hblink.cfg -r rules.py &
+else
+    python /opt/hblink3/hblink.py -c hblink.cfg
+fi
