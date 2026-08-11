@@ -2,7 +2,7 @@ FROM python:3.11-slim
 
 ENV PYTHONUNBUFFERED=1
 
-WORKDIR /hblink3
+WORKDIR /opt/hblink3
 
 RUN useradd \
     --uid 54000 \
